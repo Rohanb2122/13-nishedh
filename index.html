@@ -14,10 +14,10 @@
     <style>
         body {
             font-family: 'Lora', serif;
-            /* Applying a subtle animated gradient for a cinematic background */
             background: linear-gradient(-45deg, #000000, #1a001a, #001a33, #1a1a00);
             background-size: 400% 400%;
             animation: gradientBG 25s ease infinite;
+            color: #e5e7eb;
         }
 
         @keyframes gradientBG {
@@ -26,7 +26,53 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Card styles */
+        #background-effects {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #background-effects::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200vmax;
+            height: 200vmax;
+            transform-origin: center;
+            transform: translate(-50%, -50%);
+            background:
+                radial-gradient(circle at 30% 30%, rgba(168, 85, 247, 0.1), transparent 35%),
+                radial-gradient(circle at 70% 70%, rgba(59, 130, 246, 0.1), transparent 35%),
+                radial-gradient(circle at 50% 90%, rgba(250, 204, 21, 0.08), transparent 40%);
+            animation: spin-lights 45s linear infinite;
+        }
+
+        @keyframes spin-lights {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        #background-effects::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="f"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23f)" opacity="0.03"/></svg>');
+            animation: grain-pan 10s steps(10) infinite;
+        }
+
+        @keyframes grain-pan {
+            0%, 100% { transform: translate(0, 0); } 10% { transform: translate(-5%, -10%); } 20% { transform: translate(-15%, 5%); } 30% { transform: translate(7%, -25%); } 40% { transform: translate(-5%, 25%); } 50% { transform: translate(-15%, 10%); } 60% { transform: translate(15%, 0%); } 70% { transform: translate(0%, 15%); } 80% { transform: translate(3%, 35%); } 90% { transform: translate(-10%, 10%); }
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+        }
+
         .card {
             transition: all 0.3s ease-in-out;
             will-change: transform, box-shadow;
@@ -34,7 +80,6 @@
             cursor: pointer;
         }
         
-        /* Individual Hover Glow Effects */
         .card-hinsa:hover { box-shadow: 0 0 30px 5px rgba(239, 68, 68, 0.6); transform: translateY(-10px) scale(1.03); }
         .card-anyadharma:hover { box-shadow: 0 0 30px 5px rgba(168, 85, 247, 0.6); transform: translateY(-10px) scale(1.03); }
         .card-vikho:hover { box-shadow: 0 0 30px 5px rgba(236, 72, 153, 0.6); transform: translateY(-10px) scale(1.03); }
@@ -49,7 +94,6 @@
         .card-ishanatray:hover { box-shadow: 0 0 30px 5px rgba(20, 184, 166, 0.6); transform: translateY(-10px) scale(1.03); }
         .card-kakhay:hover { box-shadow: 0 0 30px 5px rgba(75, 85, 99, 0.6); transform: translateY(-10px) scale(1.03); }
 
-        /* Animation for cards appearing */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -58,18 +102,14 @@
             animation: fadeIn 0.8s ease-out forwards;
         }
         
-        /* Modal Styles */
         .modal-open { overflow: hidden; }
         #modal-container { transition: opacity 0.3s ease-in-out; }
         #modal-content-wrapper { transition: transform 0.3s ease-in-out; }
         
-        /* Background Animation for Modal */
-        .animation-wrapper {
+        #animation-wrapper {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
             z-index: 0;
         }
@@ -88,9 +128,10 @@
 </head>
 <body class="text-gray-200">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div id="background-effects"></div>
 
-        <!-- Main Title Section -->
+    <div class="main-container container mx-auto p-4 md:p-8">
+
         <header class="text-center my-8 md:my-16">
             <h1 class="text-5xl md:text-7xl font-bold text-white tracking-widest" style="text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);">
                 १०. निषेधः
@@ -100,50 +141,38 @@
             </p>
         </header>
 
-        <!-- Grid for the 13 sections -->
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-
+            <!-- All 13 cards are the same as before -->
             <!-- १) हिंसा -->
             <div class="card card-hinsa bg-black bg-opacity-40 border-2 border-red-500/50 rounded-xl overflow-hidden backdrop-blur-sm fade-in" style="animation-delay: 0.1s;">
-                <div class="p-6 border-b-2 border-red-500/50">
-                    <h2 class="text-3xl font-bold text-red-400">१) हिंसा</h2>
-                </div>
-                <div class="p-6">
-                    <p class="text-gray-300 text-lg leading-relaxed">विधी आचरत असतांना अलक्षित हिंसेच्या व्यतिरिक्त चतुर्विध भूतग्रामांचा अर्थात् (जारज, अंडज, स्वेदज, उद्भिज) यांचा प्राणघात किंवा छेदभेद. हे हिंसेचे लक्षण होय.</p>
-                </div>
+                <div class="p-6 border-b-2 border-red-500/50"><h2 class="text-3xl font-bold text-red-400">१) हिंसा</h2></div>
+                <div class="p-6"><p class="text-gray-300 text-lg leading-relaxed">विधी आचरत असतांना अलक्षित हिंसेच्या व्यतिरिक्त चतुर्विध भूतग्रामांचा अर्थात् (जारज, अंडज, स्वेदज, उद्भिज) यांचा प्राणघात किंवा छेदभेद. हे हिंसेचे लक्षण होय.</p></div>
             </div>
-
             <!-- २) अन्यधर्म -->
             <div class="card card-anyadharma bg-black bg-opacity-40 border-t-2 border-b-2 border-purple-500/50 rounded-xl p-6 backdrop-blur-sm fade-in" style="animation-delay: 0.2s;">
                 <h2 class="text-3xl font-bold text-purple-400 text-center mb-4">२) अन्यधर्म</h2>
                 <p class="text-gray-300 text-lg text-center leading-relaxed">ज्या अर्थामुळे पुरुषाला विकल्प स्फुरतो (विपरीत कल्पना स्फुरते) तो अर्थ अन्यधर्म म्हणायचा.</p>
             </div>
-
-            <!-- ... All other 11 cards go here, with the same structure as before ... -->
             <!-- ३) विखो -->
             <div class="card card-vikho bg-gradient-to-br from-pink-950/40 to-black/40 border border-pink-500/50 rounded-xl p-6 backdrop-blur-sm fade-in" style="animation-delay: 0.3s;">
                 <h2 class="text-3xl font-bold text-pink-400">३) विखो (विषय)</h2>
                 <p class="text-gray-300 text-lg mt-4 leading-relaxed">अपरधर्माचं धारण करणं, विकारासोबत संभोग साधन, स्त्रीरमण तो विषय म्हणावा.</p>
             </div>
-            
             <!-- ४) अधिकवृत्ती -->
             <div class="card card-adhikavritti bg-black bg-opacity-40 border-4 border-double border-amber-400/50 rounded-lg p-6 backdrop-blur-sm fade-in" style="animation-delay: 0.4s;">
                 <h2 class="text-3xl font-bold text-amber-300 text-center">४) अधिकवृत्ती</h2>
                 <p class="text-gray-300 text-lg mt-4 leading-relaxed">ज्यांच्यामुळे बोध होतो, त्यांच्याकडून मान्यता, गौरव, पूजा स्वीकारणे पण त्यांना मात्र काही न देणे.</p>
             </div>
-
             <!-- ५) प्रमाद -->
             <div class="card card-pramad bg-gray-900/40 border-l-8 border-gray-500/50 rounded-xl p-6 backdrop-blur-sm fade-in" style="animation-delay: 0.5s;">
                 <h2 class="text-3xl font-bold text-gray-400">५) प्रमाद</h2>
                 <p class="text-gray-300 text-lg mt-4 leading-relaxed">ज्यामुळे देहाचा घात होतो किंवा परमेश्वरधर्माचा उच्छेद होतो, ईश्वराला अंतर पडते तो प्रमाद म्हणावा.</p>
             </div>
-            
             <!-- ६) ताती -->
             <div class="card card-tati bg-black bg-opacity-40 border-2 border-dashed border-orange-500/50 rounded-xl p-6 backdrop-blur-sm fade-in" style="animation-delay: 0.6s;">
                 <h2 class="text-3xl font-bold text-orange-400 text-right">६) ताती</h2>
                 <p class="text-gray-300 text-lg mt-4 text-right leading-relaxed">अनुकूल जनांना प्रतिकूळ करणे, भांडणे लावणे, देवतेची निंदा करणे; अशी दहा प्रकारे दुसऱ्याची प्रतिकूळता.</p>
             </div>
-
             <!-- ७) भंग -->
             <div class="card card-bhang bg-black bg-opacity-40 rounded-xl p-6 backdrop-blur-sm relative overflow-hidden fade-in" style="animation-delay: 0.7s;">
                  <div class="absolute top-0 left-0 w-full h-full bg-blue-500/20" style="clip-path: polygon(0 0, 100% 0, 100% 2%, 0 4%);"></div>
@@ -151,20 +180,17 @@
                 <p class="text-gray-300 text-lg mt-4 leading-relaxed">विपरीत बुद्धीनं परमेश्वराचा कल भंग करणे आणि काम, क्रोधाने ज्ञानीयाची मनोवृत्ती भंग करणे.</p>
                  <div class="absolute bottom-0 right-0 w-full h-full bg-blue-500/20" style="clip-path: polygon(0 98%, 100% 96%, 100% 100%, 0 100%);"></div>
             </div>
-            
             <!-- ८) द्रव्यसंबंध साक्षित्व -->
             <div class="card card-dravya bg-green-950/20 border-t-4 border-b-4 border-green-500/50 rounded-3xl p-6 backdrop-blur-sm fade-in" style="animation-delay: 0.8s;">
                 <h2 class="text-3xl font-bold text-green-400 text-center">८) द्रव्यसंबंध साक्षित्व</h2>
                 <p class="text-gray-300 text-lg mt-4 leading-relaxed">द्रव्याचं ऋण काढून देणं, ग्वाही देणं, दुसऱ्याचा व्यापार द्रव्यासाठी करणं.</p>
             </div>
-
             <!-- ९) क्रयविक्रय -->
             <div class="card card-krayvikray bg-black bg-opacity-40 border border-lime-400/50 rounded-xl p-6 backdrop-blur-sm fade-in" style="animation-delay: 0.9s;">
                 <h2 class="text-3xl font-bold text-lime-300">९) क्रयविक्रय</h2>
                  <div class="w-full h-px bg-lime-400/50 my-3"></div>
                 <p class="text-gray-300 text-lg leading-relaxed">द्रव्यानं वस्तू घेणे, आपली वस्तू लाभासाठी विकणे, याप्रमाणे द्रव्याचं उपार्जन करणं.</p>
             </div>
-
             <!-- १०) छेदभेद -->
             <div class="card card-chhedbhed bg-indigo-950/30 flex items-center gap-6 p-6 border border-indigo-500/50 rounded-xl backdrop-blur-sm fade-in" style="animation-delay: 1.0s;">
                  <div class="w-px h-full bg-indigo-500/50"></div>
@@ -173,31 +199,24 @@
                     <p class="text-gray-300 text-lg mt-4 leading-relaxed">औषधीसाठी वृक्ष तोडणे आणि कामिक औषधीने किंवा मंत्रानं लोकांची मने भेदणे.</p>
                  </div>
             </div>
-
             <!-- ११) यात्राक्षेत्राजाणे -->
             <div class="card card-yatra bg-yellow-950/30 p-6 border-2 border-yellow-700/50 rounded-tr-3xl rounded-bl-3xl backdrop-blur-sm fade-in" style="animation-delay: 1.1s;">
                  <h2 class="text-3xl font-bold text-yellow-500">११) यात्राक्षेत्राजाणे</h2>
                  <p class="text-gray-300 text-lg mt-4 leading-relaxed">पुण्यकाळात किंवा इतर वेळी देवतेला लोक भेटतात ते भोगस्थान, त्याला यात्राक्षेत्र म्हणावं.</p>
             </div>
-
             <!-- १२) ईषणत्रय -->
             <div class="card card-ishanatray bg-teal-950/30 p-6 border border-teal-500/50 rounded-xl backdrop-blur-sm fade-in" style="animation-delay: 1.2s;">
                 <h2 class="text-3xl font-bold text-teal-300 text-center mb-4">१२) ईषणत्रय</h2>
-                <div class="flex justify-around text-center text-teal-400/80">
-                    <span>कीर्ती</span> | <span>द्रव्य</span> | <span>शिष्य</span>
-                </div>
+                <div class="flex justify-around text-center text-teal-400/80"><span>कीर्ती</span> | <span>द्रव्य</span> | <span>शिष्य</span></div>
                 <p class="text-gray-300 text-lg mt-4 leading-relaxed">या तीन प्रकारच्या इच्छांसाठी प्रयत्न करणे.</p>
             </div>
-
             <!-- १३) कखाय वर्मस्पर्श -->
             <div class="card card-kakhay bg-gray-800/50 p-6 border border-gray-600/50 rounded-xl backdrop-blur-sm fade-in" style="animation-delay: 1.3s;">
                 <h2 class="text-3xl font-bold text-gray-300 opacity-80">१३) कखाय वर्मस्पर्श</h2>
                 <p class="text-gray-400 text-lg mt-4 leading-relaxed italic">दुसऱ्याचे दोष मनात आठवणे, पुन्हा पुन्हा सांगणे आणि गुप्त अर्थ सभेत प्रकट करणे.</p>
             </div>
-            
         </main>
         
-        <!-- Conclusion Section -->
         <footer class="text-center my-12 md:my-20 max-w-4xl mx-auto">
              <div class="w-full h-px bg-gray-700 my-8"></div>
              <h3 class="text-2xl md:text-3xl text-white font-semibold mb-4">निष्कर्ष</h3>
@@ -209,11 +228,9 @@
 
     <!-- Modal Container -->
     <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
-        <!-- Background Animation Wrapper -->
         <div id="animation-wrapper" class="absolute inset-0 overflow-hidden"></div>
-        
-        <div id="modal-content-wrapper" class="relative w-full max-w-3xl scale-95">
-             <!-- Cloned card will be inserted here by JS -->
+        <div id="modal-content-wrapper" class="relative w-full max-w-3xl scale-95 text-center">
+             <!-- Cloned card and button will be inserted here by JS -->
         </div>
     </div>
 
@@ -225,9 +242,8 @@
         const modalContentWrapper = document.getElementById('modal-content-wrapper');
         const animationWrapper = document.getElementById('animation-wrapper');
 
-        // Function to generate and append particles for background animation
         const createParticles = (color) => {
-            animationWrapper.innerHTML = ''; // Clear old particles
+            animationWrapper.innerHTML = ''; 
             const particleCount = 20;
             for(let i=0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -243,15 +259,24 @@
             }
         };
 
+        const closeModal = () => {
+            if (!document.body.classList.contains('modal-open')) return;
+            modalContainer.classList.remove('opacity-100');
+            modalContentWrapper.classList.remove('scale-100');
+            modalContentWrapper.classList.add('scale-95');
+            setTimeout(() => {
+                modalContainer.classList.add('pointer-events-none');
+                document.body.classList.remove('modal-open');
+                animationWrapper.innerHTML = '';
+            }, 300);
+        };
+
         cards.forEach(card => {
             card.addEventListener('dblclick', (event) => {
-                card.blur(); // Remove focus to stop hover effects
-                
-                // --- Get the glow color from the card's hover style ---
+                card.blur();
                 const classList = Array.from(card.classList);
                 const colorClass = classList.find(c => c.startsWith('card-'));
-                let glowColor = 'rgba(255, 255, 255, 1)'; // Default color
-                // This is a simplified way. A more robust way would involve getting computed style.
+                let glowColor = 'rgba(255, 255, 255, 1)'; 
                 const colorMap = {
                     'card-hinsa': '#ef4444', 'card-anyadharma': '#a855f7', 'card-vikho': '#ec4899',
                     'card-adhikavritti': '#facc15', 'card-pramad': '#9ca3af', 'card-tati': '#f97316',
@@ -262,18 +287,29 @@
                     glowColor = colorMap[colorClass];
                 }
                 
-                // Create particles with the specific color
                 createParticles(glowColor);
 
                 const clonedCard = card.cloneNode(true);
-                clonedCard.style.transform = 'translateY(0) scale(1)'; // Reset hover styles
-                clonedCard.style.boxShadow = `0 0 40px 10px ${glowColor}55`; // Add a prominent shadow
+                clonedCard.style.transform = 'translateY(0) scale(1)';
+                clonedCard.style.boxShadow = `0 0 40px 10px ${glowColor}55`;
                 clonedCard.style.cursor = 'default';
+                clonedCard.style.display = 'inline-block'; // Make it behave like a block but centered
+
+                // NEW: Create and style the back button
+                const backButton = document.createElement('button');
+                backButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H15a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    परत जा
+                `;
+                backButton.className = 'mt-8 text-lg bg-gray-800/60 text-gray-300 px-8 py-3 rounded-full border border-gray-600/80 hover:bg-gray-700/80 hover:border-gray-500 transition-all duration-300 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-500';
+                backButton.onclick = closeModal;
 
                 modalContentWrapper.innerHTML = '';
                 modalContentWrapper.appendChild(clonedCard);
+                modalContentWrapper.appendChild(backButton);
                 
-                // Show modal with transitions
                 document.body.classList.add('modal-open');
                 modalContainer.classList.remove('pointer-events-none');
                 modalContainer.classList.add('opacity-100');
@@ -282,28 +318,12 @@
             });
         });
 
-        const closeModal = () => {
-            if (!document.body.classList.contains('modal-open')) return;
-
-            modalContainer.classList.remove('opacity-100');
-            modalContentWrapper.classList.remove('scale-100');
-            modalContentWrapper.classList.add('scale-95');
-            
-            setTimeout(() => {
-                modalContainer.classList.add('pointer-events-none');
-                document.body.classList.remove('modal-open');
-                animationWrapper.innerHTML = ''; // Stop animation
-            }, 300); // Match CSS transition duration
-        };
-
-        // Close on backdrop click
         modalContainer.addEventListener('click', (event) => {
             if (event.target === modalContainer) {
                 closeModal();
             }
         });
 
-        // Close on Escape key
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 closeModal();
