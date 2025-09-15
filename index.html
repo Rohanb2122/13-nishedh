@@ -134,10 +134,10 @@
 
         <header class="text-center my-8 md:my-16">
             <h1 class="text-5xl md:text-7xl font-bold text-white tracking-widest" style="text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);">
-                १०. निषेधः
+                १३ निषेध 
             </h1>
             <p class="text-xl md:text-2xl text-gray-400 mt-4 italic">
-                (प्रत्येक भागावर अधिक माहितीसाठी डबल-क्लिक करा)
+                (Double tap any vibhag)
             </p>
         </header>
 
@@ -230,7 +230,7 @@
     <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
         <div id="animation-wrapper" class="absolute inset-0 overflow-hidden"></div>
         <div id="modal-content-wrapper" class="relative w-full max-w-3xl scale-95 text-center">
-             <!-- Cloned card and button will be inserted here by JS -->
+             <!-- Cloned card and other content will be inserted here by JS -->
         </div>
     </div>
 
@@ -241,6 +241,23 @@
         const modalContainer = document.getElementById('modal-container');
         const modalContentWrapper = document.getElementById('modal-content-wrapper');
         const animationWrapper = document.getElementById('animation-wrapper');
+
+        // NEW: Detailed information for each card
+        const detailedInfo = {
+            'card-hinsa': "ही संकल्पना केवळ शारीरिक हिंसेपुरती मर्यादित नाही. यात केवळ जीव घेणेच नाही, तर कोणत्याही सजीवाला—मग तो मनुष्य असो, प्राणी असो किंवा वनस्पती— अनावश्यक त्रास देणे, त्यांचे नैसर्गिक जीवनचक्र खंडित करणे याचाही समावेश होतो. साधकाच्या मार्गातील ही सर्वात मोठी बाधा मानली जाते, कारण ती करुणेच्या विरुद्ध आहे.",
+            'card-anyadharma': "अन्यधर्म म्हणजे स्व-धर्मापासून, म्हणजेच आत्मज्ञानाच्या मार्गापासून विचलित होणे. जेव्हा व्यक्ती बाह्य आकर्षण, भिन्न विचारसरणी किंवा तात्पुरत्या मोहांमुळे आपल्या मूळ आध्यात्मिक ध्येयापासून भरकटते, तेव्हा ती 'अन्यधर्मा'चा स्वीकार करते. यामुळे मनात संभ्रम निर्माण होतो आणि प्रगती थांबते.",
+            'card-vikho': "विकार आणि वासनांच्या अधीन होऊन केलेले कोणतेही कृत्य 'विखो' किंवा 'विषय' मानले जाते. यात केवळ शारीरिक संबंधांचाच नाही, तर इंद्रियांना सुखावणाऱ्या सर्व गोष्टींचा (उदा. अति-खाणे, अति-मनोरंजन) समावेश आहे. हे क्षणिक सुख देत असले तरी, ते आत्मिक शांती आणि स्थिरतेमध्ये अडथळा आणते.",
+            'card-adhikavritti': "ही एक सूक्ष्म वृत्ती आहे जिथे व्यक्ती, विशेषतः साधक, ज्ञान आणि मार्गदर्शन स्वीकारतो, परंतु त्या बदल्यात कृतज्ञता, सेवा किंवा ज्ञानाचा प्रसार करण्याची जबाबदारी टाळतो. गुरू किंवा मार्गदर्शकाकडून केवळ घेत राहणे आणि समाजाला किंवा परंपरेला काहीही परत न देणे, ही आध्यात्मिक कृतघ्नता मानली जाते.",
+            'card-pramad': "प्रमाद म्हणजे निष्काळजीपणा किंवा आळस. देहाची (आरोग्याची) किंवा आपल्या आध्यात्मिक अभ्यासाची (साधनेची) हेळसांड करणे, हे दोन्ही प्रमाद आहेत. यामुळे केवळ भौतिक नुकसानच होत नाही, तर परमेश्वराशी असलेले अनुसंधानही कमकुवत होते. प्रत्येक क्षण जागृत राहून जगणे अपेक्षित आहे.",
+            'card-tati': "ताती म्हणजे कलह किंवा भांडण लावण्याची वृत्ती. जे लोक तुमच्याशी चांगले वागतात, त्यांच्या मनात विष कालवणे, देवता किंवा पवित्र संकल्पनांची निंदा करून इतरांच्या भावना दुखावणे, समाजात तेढ निर्माण करणे, या सर्वांचा यात समावेश होतो. ही एक नकारात्मक ऊर्जा आहे जी नातेसंबंध आणि सामाजिक सलोखा नष्ट करते.",
+            'card-bhang': "जेव्हा एखादी व्यक्ती अज्ञानाने किंवा अहंकाराने परमेश्वराच्या योजनेत किंवा ज्ञानी व्यक्तीच्या कार्यात अडथळा आणते, तेव्हा त्याला 'भंग' म्हणतात. यात केवळ बाह्य अडथळाच नाही, तर काम-क्रोधाने एखाद्या साधू किंवा ज्ञानी व्यक्तीच्या मनात क्षोभ निर्माण करणे, त्यांची मनःशांती भंग करणे याचाही समावेश आहे.",
+            'card-dravya': "पैशाच्या व्यवहारात जास्त गुंतणे, जसे की कर्ज देणे-घेणे, जामीन राहणे किंवा केवळ पैशासाठी दुसऱ्यांची कामे करणे, हे साधकाच्या मार्गात अडथळे आणते. यामुळे मन सांसारिक चिंतांमध्ये अडकून राहते आणि आध्यात्मिक साधनेवरून लक्ष विचलित होते.",
+            'card-krayvikray': "लाभाच्या अपेक्षेने वस्तूंची खरेदी-विक्री करणे. जेव्हा व्यापाराचा मुख्य हेतू केवळ नफा कमावणे आणि संपत्ती जमा करणे हा असतो, तेव्हा मन त्यातच गुंतून जाते. गरजेपुरता व्यवहार वेगळा, पण लोभाने प्रेरित होऊन केलेला व्यापार हा निषेध मानला जातो.",
+            'card-chhedbhed': "यामध्ये दोन गोष्टी येतात: पहिला, निसर्गाचा नाश करणे, जसे की औषधी वनस्पतींची अनावश्यक तोड करणे. दुसरा, लोकांच्या मनात भेद निर्माण करणे. यात मंत्र-तंत्र, चुकीचा सल्ला किंवा manipulative बोलण्याने लोकांचे नातेसंबंध तोडणे किंवा त्यांचे विचार दूषित करणे यांचा समावेश होतो.",
+            'card-yatra': "ज्या तीर्थक्षेत्रांवर किंवा यात्रास्थळांवर धार्मिकतेपेक्षा भोग-विलासाला जास्त महत्त्व दिले जाते, तिथे जाणे टाळावे. अशा ठिकाणी गेल्याने पुण्य मिळण्याऐवजी मन चंचल आणि भोगवादी बनते, ज्यामुळे साधनेचा मूळ हेतूच नष्ट होतो.",
+            'card-ishanatray': "या तीन तीव्र इच्छा आहेत ज्या माणसाला बंधनात अडकवतात: १) कीर्ती (लोकांमध्ये प्रसिद्ध होण्याची इच्छा), २) द्रव्य (संपत्ती मिळवण्याची इच्छा), आणि ३) शिष्य (आपले अनुयायी वाढवण्याची इच्छा). या इच्छा पूर्ण करण्यासाठी केलेले प्रयत्न व्यक्तीला अहंकारी आणि अशांत बनवतात.",
+            'card-kakhay': "याचा अर्थ आहे दुसऱ्यांच्या चुका आणि दोष उघड करणे. यात तीन क्रिया येतात: १) दुसऱ्याचे दोष मनात घोळवत राहणे, २) तेच दोष वारंवार बोलून दाखवणे, आणि ३) एखाद्याची खाजगी किंवा गुप्त गोष्ट जाहीर सभेत उघड करून त्याला अपमानित करणे. ही अत्यंत हीन वृत्ती मानली जाते."
+        };
 
         const createParticles = (color) => {
             animationWrapper.innerHTML = ''; 
@@ -293,9 +310,21 @@
                 clonedCard.style.transform = 'translateY(0) scale(1)';
                 clonedCard.style.boxShadow = `0 0 40px 10px ${glowColor}55`;
                 clonedCard.style.cursor = 'default';
-                clonedCard.style.display = 'inline-block'; // Make it behave like a block but centered
+                clonedCard.style.display = 'inline-block';
+                clonedCard.classList.remove('fade-in');
 
-                // NEW: Create and style the back button
+                // NEW: Create and style the detailed description paragraph
+                const detailParagraph = document.createElement('p');
+                detailParagraph.className = 'text-lg text-gray-300 mt-8 max-w-xl mx-auto text-left leading-relaxed px-4 opacity-0';
+                detailParagraph.style.animation = 'fadeIn 0.6s ease-out 0.3s forwards';
+                
+                if (colorClass && detailedInfo[colorClass]) {
+                    detailParagraph.innerHTML = `<strong>सविस्तर:</strong> ${detailedInfo[colorClass]}`;
+                } else {
+                    detailParagraph.textContent = 'या विषयावर अधिक माहिती लवकरच उपलब्ध होईल.';
+                }
+
+                // Create and style the back button
                 const backButton = document.createElement('button');
                 backButton.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -303,11 +332,13 @@
                     </svg>
                     परत जा
                 `;
-                backButton.className = 'mt-8 text-lg bg-gray-800/60 text-gray-300 px-8 py-3 rounded-full border border-gray-600/80 hover:bg-gray-700/80 hover:border-gray-500 transition-all duration-300 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-500';
+                backButton.className = 'mt-8 text-lg bg-gray-800/60 text-gray-300 px-8 py-3 rounded-full border border-gray-600/80 hover:bg-gray-700/80 hover:border-gray-500 transition-all duration-300 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-500 opacity-0';
+                backButton.style.animation = 'fadeIn 0.6s ease-out 0.5s forwards';
                 backButton.onclick = closeModal;
 
                 modalContentWrapper.innerHTML = '';
                 modalContentWrapper.appendChild(clonedCard);
+                modalContentWrapper.appendChild(detailParagraph); // Append new paragraph
                 modalContentWrapper.appendChild(backButton);
                 
                 document.body.classList.add('modal-open');
